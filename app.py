@@ -4,7 +4,9 @@ import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import load_model
 from keras.utils import pad_sequences
-model = load_model("pre_model1.h5")
+model = load_model("pre_model1.h5",compile=False)
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 st.set_page_config(page_title="Emotion Detection", page_icon="💬", layout="centered")
 
 st.markdown("""
