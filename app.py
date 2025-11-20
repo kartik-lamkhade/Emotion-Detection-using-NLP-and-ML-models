@@ -2,8 +2,9 @@ import streamlit as st
 import joblib
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.models import load_model
 from keras.utils import pad_sequences
-model = joblib.load("pre_model1.h5")
+model = load_model("pre_model1.h5")
 st.set_page_config(page_title="Emotion Detection", page_icon="💬", layout="centered")
 
 st.markdown("""
