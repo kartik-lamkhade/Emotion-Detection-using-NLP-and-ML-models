@@ -1,7 +1,10 @@
 import streamlit as st
 import joblib
-
-model = joblib.load("model_loge.pkl")
+import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from keras.utils import pad_sequences
+# Load model & vectorizer
+model = joblib.load("pre_model1.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
 st.set_page_config(page_title="Emotion Detection", page_icon="💬", layout="centered")
@@ -34,25 +37,20 @@ st.markdown("<h1 class='title'>💬 Emotion Detection using NLP</h1>", unsafe_al
 
 st.write("Enter a sentence below and let the model detect the emotion!")
 
-Text = st.text_input("✍️ Enter Text", placeholder="Type something like 'I am feeling great today!'")
+text = st.text_input("✍️ Enter Text", placeholder="Type something like 'I am feeling great today!'")
 
 if st.button("🔍 Predict Emotion"):
-    if Text.strip() == "":
+    if text.strip() == "":
         st.warning("Please enter some text!")
     else:
-        x_new = vectorizer.transform([Text])
-        pre = model.predict(x_new)[0]
-
-        emotions = {
-            1: "😢 Sadness",
-            2: "😡 Anger",
-            3: "❤️ Love",
-            4: "😮 Surprise",
-            5: "😱 Fear",
-            6: "😊 Joy"
-        }
-
-        st.success(f"### Predicted emotion: {emotions.get(pre, 'Unknown')}")
-
-
+        text_list = [text.lower()]
+        tokenizer = Tokenizer(num_words=5000) 
+        tokenizer.fit_on_texts(text_list)
+        text_seq = tokenizer.texts_to_sequences(text_list)
+        text_pad = pad_sequences(text_seq, padding='post', maxlen=100)
+        pre = model.predict(text_pad)
+        pred_index = np.argmax(pre)
+        labels = ['anger 😡','fear 😱','joy 😊','love ❤️','sadness 😢','surprise 😮']
+        pred_label = labels[pred_index]
+        st.success(f"### Predicted emotion: {(pred_label, 'Unknown')}")
 st.markdown("<p class='footer'>Made with ❤️ using Streamlit</p>", unsafe_allow_html=True)
