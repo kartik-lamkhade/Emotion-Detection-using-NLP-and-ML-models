@@ -3,10 +3,7 @@ import joblib
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
-# Load model & vectorizer
-model = joblib.load("pre_model1.pkl")
-vectorizer = joblib.load("vectorizer.pkl")
-
+model = joblib.load("pre_model1.h5")
 st.set_page_config(page_title="Emotion Detection", page_icon="💬", layout="centered")
 
 st.markdown("""
