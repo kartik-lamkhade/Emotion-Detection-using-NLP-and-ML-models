@@ -38,16 +38,19 @@ st.markdown("<h1 class='title'>💬 Emotion Detection using NLP</h1>", unsafe_al
 st.write("Enter a sentence below and let the model detect the emotion!")
 
 text = st.text_input("✍️ Enter Text", placeholder="Type something like 'I am feeling great today!'")
-
+text_list = [text.lower()]
+tokenizer = Tokenizer(num_words=5000) 
+tokenizer.fit_on_texts(text_list)
+text_seq = tokenizer.texts_to_sequences(text_list)
+text_pad = pad_sequences(text_seq, padding='post', maxlen=100)
 if st.button("🔍 Predict Emotion"):
     if text.strip() == "":
         st.warning("Please enter some text!")
     else:
-        text_list = [text.lower()]
-        tokenizer = Tokenizer(num_words=5000) 
-        tokenizer.fit_on_texts(text_list)
-        text_seq = tokenizer.texts_to_sequences(text_list)
-        text_pad = pad_sequences(text_seq, padding='post', maxlen=100)
+        
+        
+        
+        
         pre = model.predict(text_pad)
         pred_index = np.argmax(pre)
         labels = ['anger 😡','fear 😱','joy 😊','love ❤️','sadness 😢','surprise 😮']
