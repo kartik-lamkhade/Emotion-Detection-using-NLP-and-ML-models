@@ -8,27 +8,25 @@ import json
 model = load_model("pre_model1.h5", compile=False)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Load saved tokenizer
-with open("tokenizer.json") as f:
+# Load tokenizer.json
+with open("tokenizer.json", "r") as f:
     data = json.load(f)
     tokenizer = tokenizer_from_json(data)
 
-st.set_page_config(page_title="Emotion Detection", page_icon="💬", layout="centered")
+st.title("💬 Emotion Detection using NLP")
 
-st.markdown("<h1 class='title'>💬 Emotion Detection using NLP</h1>", unsafe_allow_html=True)
+text = st.text_input("Enter text")
 
-text = st.text_input("✍️ Enter Text", placeholder="Type something like 'I am feeling great today!'")
-
-if st.button("🔍 Predict Emotion"):
+if st.button("Predict"):
     if text.strip() == "":
-        st.warning("Please enter some text!")
+        st.warning("Enter something!")
     else:
         seq = tokenizer.texts_to_sequences([text.lower()])
-        padded = pad_sequences(seq, maxlen=100, padding='post')
+        pad = pad_sequences(seq, maxlen=100, padding='post')
 
-        preds = model.predict(padded)
-        pred_index = np.argmax(preds)
+        pred = model.predict(pad)
+        idx = np.argmax(pred)
 
         labels = ['anger 😡','fear 😱','joy 😊','love ❤️','sadness 😢','surprise 😮']
 
-        st.success(f"### Predicted emotion: {labels[pred_index]}")
+        st.success(f"Predicted emotion: {labels[idx]}")
